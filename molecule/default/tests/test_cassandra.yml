@@ -1,0 +1,81 @@
+# Molecule managed
+
+---
+
+file:
+  {{ cassandra_home_directory }}:
+    exists: true
+    filetype: directory
+    owner: {{ cassandra_user }}
+    group: {{ cassandra_group }}
+  {{ cassandra_config_directory }}:
+    exists: true
+    filetype: directory
+    owner: root
+    group: root
+  {{ cassandra_triggers_dir }}:
+    exists: true
+    filetype: directory
+    owner: root
+    group: root
+  {{ cassandra_config_directory }}/cassandra.yaml:
+    exists: true
+    filetype: file
+    owner: root
+    group: root
+  {{ cassandra_config_directory }}/jvm.options:
+    exists: true
+    filetype: file
+    owner: root
+    group: root
+  {{ cassandra_config_directory }}/cassandra-rackdc.properties:
+    exists: true
+    filetype: file
+    owner: root
+    group: root
+  {{ cassandra_config_directory }}/cassandra-topology.properties:
+    exists: true
+    filetype: file
+    owner: root
+    group: root
+  {{ cassandra_config_directory }}/commitlog_archiving.properties:
+    exists: true
+    filetype: file
+    owner: root
+    group: root
+{% for item in cassandra_data_file_directories %}
+  {{ item }}:
+    exists: true
+    owner: {{ cassandra_user }}
+    group: {{ cassandra_group }}
+    filetype: directory
+  {% endfor %}
+
+service:
+  cassandra:
+    enabled: true
+    running: true
+
+port:
+  {% if (cassandra_start_native_transport == "true") -%}
+  tcp:{{ cassandra_native_transport_port }}:
+    listening: true
+  {% endif %}
+
+  tcp:{{ cassandra_storage_port }}:
+    listening: true
+
+  {% if ( cassandra_start_rpc == "true" ) -%}
+  tcp:{{ cassandra_rpc_port }}:
+    listening: true
+  {% endif %}
+
+  {% if (cassandra_native_transport_port_ssl is defined)-%}
+  tcp:{{ cassandra_native_transport_port_ssl }}:
+    listening: true
+  {% endif %}
+
+  {% if (cassandra_server_encryption_options.internode_encryption != "none")-%}
+  tcp:{{ cassandra_ssl_storage_port }}:
+    listening: true
+  {% endif %}

@@ -1,0 +1,7 @@
+---
+
+- name: CASSANDRA | Configuring service
+  systemd:
+    name: cassandra
+    state: "{{ cassandra_service_state }}"
+    enabled: "{{ cassandra_service_enabled }}"

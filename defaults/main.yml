@@ -1,0 +1,313 @@
+---
+## General
+cassandra_version: "3.11.4"
+cassandra_package_name: "apache-cassandra-{{ cassandra_version }}-bin.tar.gz"
+cassandra_package_url: "http://ftp.cixug.es/apache/cassandra/{{ cassandra_version }}/{{ cassandra_package_name }}"
+cassandra_package_checksum: "sha256:http://www.apache.org/dist/cassandra/{{ cassandra_version }}/{{ cassandra_package_name }}.sha256"
+
+## Service options
+# start on boot
+cassandra_service_enabled: true
+# current state: started, stopped
+cassandra_service_state: started
+
+# Owner (see defaults in vars/ )
+cassandra_user: cassandra
+cassandra_uid: 108
+cassandra_group: cassandra
+cassandra_gid: 112
+
+# Files & Paths
+cassandra_home_directory: /var/lib/cassandra
+cassandra_executable_path: "{{ cassandra_home_directory }}/bin/cassandra"
+cassandra_data_file_directories:
+  - "{{ cassandra_home_directory }}/data"
+cassandra_log_directory: "{{ cassandra_home_directory }}/log"
+cassandra_config_directory: "{{ cassandra_home_directory }}/conf"
+cassandra_triggers_dir: "{{ cassandra_config_directory }}/triggers"
+cassandra_commitlog_directory: "{{ cassandra_home_directory }}/commitlog"
+cassandra_service_path: /lib/systemd/system/cassandra.service
+
+# JVM startup options, undefined by default
+#
+# cassandra_jvm_available_processors: processors
+# cassandra_initial_token: token
+# cassandra_join_ring: "true|false"
+# cassandra_load_ring_state: "true|false"
+# cassandra_metricsReporterConfigFile: file
+# cassandra_native_transport_port: port (defined in cassandra.yaml by default - see cassandra general settings options block)
+# cassandra_partitioner: partitioner defined in cassandra.yml
+# cassandra_replace_address: listen_address or broadcast_address of dead node
+# cassandra_replyList: table
+# cassandra_ring_delay_ms: ms
+# cassandra_rpc_port: port (defined in cassandra.yaml by default)
+# cassandra_ssl_storage_port: port (defined in cassandra.yaml by default)
+# cassandra_start_native_transport: "true|false"
+# cassandra_start_rpc: "true|false" (defined in cassandra.yaml by default)
+# cassandra_storage_port: port (defined in cassandra.yaml by default)
+# cassandra_write_survey: "true|false"
+# disable_auth_caches_remote_configuration: "true|false"
+#
+# JVM settings
+#
+cassandra_enable_assertions: true
+cassandra_enable_thread_priorities: true
+cassandra_lowering_thread_priority: 42
+cassandra_enable_heap_dump_oom: true
+cassandra_per_thread_stack_size: "256k"
+cassandra_larger_interned_string_table: 1000003
+cassandra_always_pre_touch: true
+cassandra_disable_biased_locking: true
+cassandra_use_resize_TLAB: true
+cassandra_perf_disable_shared_mem: true
+cassandra_prefer_binding_ipv4: "true"
+#
+# JVM debug settings
+#
+cassandra_enable_flight_recorder: false
+cassandra_remote_debuggers: false
+cassandra_log_internal_method_compilation: false
+#
+# JVM heap settings
+#
+# cassandra_heap_min_size=4G
+# cassandra_heap_max_size=4G
+# cassandra_young_generation_size=800M
+#
+# JVM GC CMS settings
+#
+cassandra_use_par_new_gc: true
+cassandra_use_conc_mark_sweep_gc: true
+cassandra_cms_parallel_remarki_enabled: true
+cassandra_survivor_ratio: 8
+cassandra_max_tenuring_threshold: 1
+cassandra_cms_initiating_occupancy_fraction: 75
+cassandra_cms_initiating_occupancy_only: true
+cassandra_cms_wait_duration: 10000
+cassandra_cms_eden_chunks_record_always: true
+cassandra_cms_class_unloading_enabled: true
+#
+# JVM GC G1 settings
+#
+# cassandra_use_g1_gc: true|false
+# cassandra_g1r_set_updating_pause_time_percent: 5
+# cassandra_max_gc_pause_millis: 500
+# cassandra_initiating_heap_occupancy_percent: 70
+# cassandra_parallel_gc_threads: 16
+# cassandra_con_gc_threads: 16
+# JVM optional G1 settings
+#
+cassandra_print_gc_details: true
+cassandra_print_gc_date_stamps: true
+cassandra_print_heap_at_gc: true
+cassandra_print_tenuring_distribution: true
+cassandra_print_gc_application_stopped_time: true
+cassandra_print_promotion_failure: true
+# cassandra_print_flsstatistics: 1
+# cassandra_log_gc: "/var/log/cassandra/gc.log"
+cassandra_use_gc_log_file_rotation: true
+cassandra_nr_log_files: 10
+cassandra_cg_log_file_size: "10M"
+
+# dc/rack options
+cassandra_dc: "dc1"
+cassandra_rack: "rack1"
+# cassandra_dc_suffix: string
+# cassandra_prefer_local: "true|false"
+#
+# topology options
+# cassandra_cluster_nodes:
+#   - 10.0.0.10=DC1:RAC1
+#   - 10.0.0.11=DC1:RAC1
+#   - 10.0.0.12=DC1:RAC2
+#
+# set cassandra_prefer_binding_ipv4: false if you use IPv6
+#
+cassandra_default_unknown_nodes: "DC1:r1"
+
+# cassandra general options
+#
+cassandra_cluster_name: "Test Cluster"
+cassandra_num_tokens: 256
+cassandra_hinted_handoff_enabled: "true"
+cassandra_max_hint_window_in_ms: 10800000
+cassandra_hinted_handoff_throttle_in_kb: 1024
+cassandra_max_hints_delivery_threads: 2
+cassandra_hints_flush_period_in_ms: 10000
+cassandra_max_hints_file_size_in_mb: 128
+cassandra_batchlog_replay_throttle_in_kb: 1024
+cassandra_authenticator: "AllowAllAuthenticator"
+cassandra_authorizer: "AllowAllAuthorizer"
+cassandra_role_manager: "CassandraRoleManager"
+cassandra_roles_validity_in_ms: 2000
+# cassandra_roles_update_interval_in_ms: "{{ cassandra_roles_validity_in_ms }}"
+cassandra_permissions_validity_in_ms: 2000
+# cassandra_permissions_update_interval_in_ms: "{{ cassandra_permissions_validity_in_ms }}"
+cassandra_credentials_validity_in_ms: 2000
+# cassandra_credentials_update_interval_in_ms: "{{ cassandra_credentials_validity_in_ms }}"
+cassandra_partitioner: "org.apache.cassandra.dht.Murmur3Partitioner"
+cassandra_cdc_enabled: "false"
+# cassandra_cdc_raw_directory: /var/lib/cassandra/cdc_raw
+cassandra_disk_failure_policy: "stop"
+cassandra_commit_failure_policy: "stop"
+cassandra_prepared_statements_cache_size_mb:
+cassandra_thrift_prepared_statements_cache_size_mb:
+cassandra_key_cache_size_in_mb:
+cassandra_key_cache_save_period: 14400
+# cassandra_key_cache_keys_to_save: 100
+# cassandra_row_cache_class_name: org.apache.cassandra.cache.OHCProvider
+cassandra_row_cache_size_in_mb: 0
+cassandra_row_cache_save_period: 0
+# cassandra_row_cache_keys_to_save: 100
+cassandra_counter_cache_size_in_mb:
+cassandra_counter_cache_save_period: 7200
+# cassandra_counter_cache_keys_to_save: 100
+cassandra_saved_caches_directory: "/var/lib/cassandra/saved_caches"
+cassandra_commitlog_sync: periodic
+cassandra_commitlog_sync_period_in_ms: 10000
+cassandra_commitlog_segment_size_in_mb: 32
+# cassandra_commitlog_compression: LZ4Compressor
+# cassandra_commitlog_compression_parameters:
+#   - parameter1
+#   - parameter2
+cassandra_seed_provider: org.apache.cassandra.locator.SimpleSeedProvider
+cassandra_seed_provider_parameters:
+  - 'seeds: "127.0.0.1"'
+cassandra_concurrent_reads: 32
+cassandra_concurrent_writes: 32
+cassandra_concurrent_counter_writes: 32
+cassandra_concurrent_materialized_view_writes: 32
+# cassandra_file_cache_size_in_mb: 512
+# cassandra_buffer_pool_use_heap_if_exhausted: "true"
+# cassandra_disk_optimization_strategy: ssd
+# cassandra_memtable_heap_space_in_mb: 2048
+# cassandra_memtable_offheap_space_in_mb: 2048
+# cassandra_memtable_cleanup_threshold: 0.11
+cassandra_memtable_allocation_type: "heap_buffers"
+# cassandra_commitlog_total_space_in_mb: 8192
+# cassandra_memtable_flush_writers: 1
+# cassandra_cdc_total_space_in_mb: 4096
+# cassandra_cdc_free_space_check_interval_ms:250
+cassandra_index_summary_capacity_in_mb:
+cassandra_index_summary_resize_interval_in_minutes: 60
+cassandra_trickle_fsync: "false"
+cassandra_trickle_fsync_interval_in_kb: 10240
+cassandra_storage_port: 7000
+cassandra_ssl_storage_port: 7001
+cassandra_listen_address: "localhost"
+# cassandra_listen_interface: eth0 define cassandra_listen_address or cassandra_listen_interface, not both
+# cassandra_listen_interface_prefer_ipv6: "false"
+# cassandra_broadcast_address: "1.2.3.4"
+# cassandra_listen_on_broadcast_address: "false"
+cassandra_start_native_transport: "true"
+cassandra_native_transport_port: 9042
+# cassandra_native_transport_port_ssl: 9142
+# cassandra_native_transport_max_threads: 128
+# cassandra_native_transport_max_frame_size_in_mb: 256
+# cassandra_native_transport_max_concurrent_connections: -1
+# cassandra_native_transport_max_concurrent_connections_per_ip: -1
+cassandra_start_rpc: "false"
+cassandra_rpc_address: "localhost"
+# cassandra_rpc_interface: "eth1"
+# cassandra_rpc_interface_prefer_ipv6: "false"
+cassandra_rpc_port: 9160
+# cassandra_broadcast_rpc_address: "1.2.3.4"
+cassandra_rpc_keepalive: "true"
+cassandra_rpc_server_type: "sync"
+# cassandra_rpc_min_threads: 16
+# cassandra_rpc_max_threads: 2048
+# cassandra_rpc_send_buff_size_in_bytes:
+# cassandra_rpc_recv_buff_size_in_bytes:
+cassandra_thrift_framed_transport_size_in_mb: 15
+cassandra_incremental_backups: "false"
+cassandra_snapshot_before_compaction: "false"
+cassandra_auto_snapshot: "true"
+cassandra_column_index_size_in_kb: 64
+cassandra_column_index_cache_size_in_kb: 2
+# cassandra_concurrent_compactors: 1
+cassandra_compaction_throughput_mb_per_sec: 16
+cassandra_sstable_preemptive_open_interval_in_mb: 50
+# cassandra_stream_throughput_outbound_megabits_per_sec: 200
+# cassandra_inter_dc_stream_throughput_outbound_megabits_per_sec: 200
+cassandra_read_request_timeout_in_ms: 5000
+cassandra_range_request_timeout_in_ms: 10000
+cassandra_write_request_timeout_in_ms: 2000
+cassandra_counter_write_request_timeout_in_ms: 5000
+cassandra_cas_contention_timeout_in_ms: 1000
+cassandra_truncate_request_timeout_in_ms: 60000
+cassandra_request_timeout_in_ms: 10000
+cassandra_slow_query_log_timeout_in_ms: 500
+cassandra_cross_node_timeout: "false"
+# cassandra_streaming_keep_alive_period_in_secs: 300
+# cassandra_phi_convict_threshold: 8
+cassandra_endpoint_snitch: "SimpleSnitch"
+cassandra_dynamic_snitch_update_interval_in_ms: 100
+cassandra_dynamic_snitch_reset_interval_in_ms: 600000
+cassandra_dynamic_snitch_badness_threshold: 0.1
+cassandra_request_scheduler: "org.apache.cassandra.scheduler.NoScheduler"
+# cassandra_request_scheduler: "org.apache.cassandra.scheduler.RoundRobinScheduler"
+# cassandra_request_scheduler_options:
+#   throttle_limit: 80
+#   default_weight: 5
+#   weights:
+#     Keyspace1: 1
+#     Keyspace2: 5
+cassandra_request_scheduler_id: "keyspace"
+cassandra_server_encryption_options:
+  internode_encryption: "none"
+  keystore: "conf/.keystore"
+  keystore_password: "cassandra"
+  truststore: "conf/.truststore"
+  truststore_password: "cassandra"
+cassandra_client_encryption_options:
+  enabled: "false"
+  optional: "false"
+  keystore: "conf/.keystore"
+  keystore_password: "cassandra"
+cassandra_internode_compression: dc
+cassandra_inter_dc_tcp_nodelay: "false"
+cassandra_tracetype_query_ttl: 86400
+cassandra_tracetype_repair_ttl: 604800
+# cassandra_gc_log_threshold_in_ms: 200
+cassandra_enable_user_defined_functions: "false"
+cassandra_enable_scripted_user_defined_functions: "false"
+cassandra_enable_materialized_views: "true"
+cassandra_windows_timer_interval: 1
+cassandra_transparent_data_encryption_options:
+  enabled: "false"
+  chunk_length_kb: 64
+  cipher: "AES/CBC/PKCS5Padding"
+  key_alias: "testing:1"
+  key_provider:
+    - class_name: "org.apache.cassandra.security.JKSKeyProvider"
+      parameters:
+        - keystore: "conf/.keystore"
+          keystore_password: "cassandra"
+          store_type: "JCEKS"
+          key_password: "cassandra"
+cassandra_tombstone_warn_threshold: 1000
+cassandra_tombstone_failure_threshold: 100000
+cassandra_batch_size_warn_threshold_in_kb: 5
+cassandra_batch_size_fail_threshold_in_kb: 50
+cassandra_unlogged_batch_across_partitions_warn_threshold: 10
+cassandra_compaction_large_partition_warning_threshold_mb: 100
+cassandra_gc_warn_threshold_in_ms: 1000
+cassandra_back_pressure_enabled: "false"
+cassandra_back_pressure_strategy:
+  - class_name: org.apache.cassandra.net.RateBasedBackPressure
+    parameters:
+      - high_ratio: 0.90
+        factor: 5
+        flow: FAST
+# cassandra_otc_coalescing_strategy: "DISABLED"
+# cassandra_otc_coalescing_window_us: 200
+# cassandra_otc_coalescing_enough_coalesced_messages: 8
+# cassandra_otc_backlog_expiration_interval_ms: 200
+
+# cassandra commitlog archiving options
+#
+cassandra_archive_command:
+cassandra_restore_command:
+cassandra_restore_directories:
+cassandra_restore_point_in_time:
+cassandra_precision: "MICROSECONDS"

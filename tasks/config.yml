@@ -1,0 +1,23 @@
+---
+
+- name: CASSANDRA | Copy templates with cassandra configuration
+  template:
+    src: "{{ item }}.j2"
+    dest: "{{ cassandra_config_directory }}/{{ item | basename }}"
+    owner: root
+    group: root
+    backup: true
+  loop:
+    - conf/cassandra-rackdc.properties
+    - conf/cassandra-topology.properties
+    - conf/cassandra.yaml
+    - conf/commitlog_archiving.properties
+    - conf/jvm.options
+  notify: restart cassandra
+
+- name: CASSANDRA | Copy templates with cassandra systemd unit
+  template:
+    src: "cassandra.service.j2"
+    dest: "{{ cassandra_service_path }}"
+    owner: root
+    group: root

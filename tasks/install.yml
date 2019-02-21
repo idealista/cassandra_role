@@ -1,0 +1,71 @@
+---
+
+- name: CASSANDRA | Ensure cassandra group
+  group:
+    name: "{{ cassandra_group }}"
+    gid: "{{ cassandra_gid }}"
+
+- name: CASSANDRA | Ensure cassandra user
+  user:
+    name: "{{ cassandra_user }}"
+    group: "{{ cassandra_group }}"
+    uid: "{{ cassandra_uid }}"
+    shell: /bin/false
+    home: "{{ cassandra_home_directory }}"
+    comment: "Cassandra database"
+    create_home: false
+
+- name: CASSANDRA | Ensure cassandra config dirs exists
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+  loop:
+    - "{{ cassandra_config_directory }}"
+    - "{{ cassandra_triggers_dir }}"
+
+- name: CASSANDRA | Ensure cassandra base dirs exists
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ cassandra_user }}"
+    group: "{{ cassandra_group }}"
+  loop:
+    - "{{ cassandra_log_directory }}"
+    - "{{ cassandra_commitlog_directory }}"
+    - "{{ cassandra_home_directory }}"
+
+- name: CASSANDRA | Ensure cassandra data file dirs exists
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ cassandra_user }}"
+    group: "{{ cassandra_group }}"
+  loop: "{{ cassandra_data_file_directories }}"
+
+- name: CASSANDRA | Check cassandra installed
+  stat:
+    path: "{{ cassandra_executable_path }}"
+  register: cassandra_installed
+
+- name: CASSANDRA | Check cassandra downloaded
+  stat:
+    path: "/usr/src/{{ cassandra_package_name }}"
+  register: cassandra_downloaded
+
+- name: CASSANDRA | Download cassandra package
+  get_url:
+    url: "{{ cassandra_package_url }}"
+    dest: "/usr/src/{{ cassandra_package_name }}"
+    mode: 0644
+    checksum: "{{ cassandra_package_checksum }}"
+  register: cassandra_downloaded
+  until: cassandra_downloaded is succeeded
+  when: cassandra_installed.stat.exists == false and cassandra_downloaded.stat.exists == false
+
+- name: CASSANDRA | Extract cassandra package files
+  shell: "tar -xzvf /usr/src/{{ cassandra_package_name }} -C {{ cassandra_home_directory }} --strip 1"
+  args:
+    warn: false
+  when: cassandra_installed.stat.exists == false

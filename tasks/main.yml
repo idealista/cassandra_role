@@ -1,0 +1,15 @@
+---
+- name: Cassandra | Install
+  import_tasks: install.yml
+  tags:
+    - cassandra-install
+
+- name: Cassandra | Config
+  import_tasks: config.yml
+  tags:
+    - cassandra-config
+
+- name: Cassandra | Service
+  import_tasks: service.yml
+  tags:
+    - cassandra-service
