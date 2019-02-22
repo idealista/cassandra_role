@@ -32,9 +32,11 @@
 #10.0.0.13=DC1:RAC2
 #10.21.119.14=DC3:RAC2
 #10.20.114.15=DC2:RAC2
-{% for item in cassandra_default_unknown_nodes %}
-"{{ item }}"
+{% if ( cassandra_cluster_nodes is defined ) -%}
+{% for item in cassandra_cluster_nodes %}
+{{ item }}
 {% endfor %}
+{% endif %}
 # default for unknown nodes
 default={{ cassandra_default_unknown_nodes }}
 

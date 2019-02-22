@@ -117,13 +117,13 @@ cassandra_rack: "rack1"
 #
 # topology options
 # cassandra_cluster_nodes:
-#   - 10.0.0.10=DC1:RAC1
-#   - 10.0.0.11=DC1:RAC1
-#   - 10.0.0.12=DC1:RAC2
+#   - 10.0.0.10=dc1:rack1
+#   - 10.0.0.11=dc1:rack1
+#   - 10.0.0.12=dc1:rack2
 #
 # set cassandra_prefer_binding_ipv4: false if you use IPv6
 #
-cassandra_default_unknown_nodes: "DC1:r1"
+cassandra_default_unknown_nodes: "{{ cassandra_dc }}:{{ cassandra_rack }}"
 
 # cassandra general options
 #
