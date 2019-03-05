@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased](https://github.com/idealista/cassandra_role/tree/develop)
 
+## [1.0.2](https://github.com/idealista/cassandra_role/tree/1.0.2)
+## [Full Changelog](https://github.com/idealista/cassandra_role/compare/1.0.1...1.0.2)
+### Fixed
+- *[#2](https://github.com/idealista/cassandra_role/issues/2)Fix cassandra service template* @frantsao
+
+
 ## [1.0.1](https://github.com/idealista/cassandra_role/tree/1.0.1)
 ## [Full Changelog](https://github.com/idealista/cassandra_role/compare/1.0.0...1.0.1)
 ### Added
