@@ -2,7 +2,6 @@
 [Unit]
 Description=Cassandra
 After=network.target
-WantedBy=multi-user.target
 
 [Service]
 Type=simple
@@ -10,3 +9,5 @@ ExecStart={{ cassandra_executable_path }} -f
 User={{ cassandra_user }}
 Group={{ cassandra_group }}
 
+[Install]
+WantedBy=multi-user.target
