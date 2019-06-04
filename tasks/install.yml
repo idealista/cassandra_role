@@ -62,10 +62,10 @@
     checksum: "{{ cassandra_package_checksum }}"
   register: cassandra_downloaded
   until: cassandra_downloaded is succeeded
-  when: cassandra_installed.stat.exists == false and cassandra_downloaded.stat.exists == false
+  when: not cassandra_installed.stat.exists and not cassandra_downloaded.stat.exists
 
 - name: CASSANDRA | Extract cassandra package files
-  shell: "tar -xzvf /usr/src/{{ cassandra_package_name }} -C {{ cassandra_home_directory }} --strip 1"
+  command: "tar -xzvf /usr/src/{{ cassandra_package_name }} -C {{ cassandra_home_directory }} --strip 1"
   args:
     warn: false
-  when: cassandra_installed.stat.exists == false
+  when: not cassandra_installed.stat.exists
