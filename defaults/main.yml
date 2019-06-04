@@ -10,6 +10,10 @@ cassandra_package_checksum: "sha256:http://www.apache.org/dist/cassandra/{{ cass
 cassandra_service_enabled: true
 # current state: started, stopped
 cassandra_service_state: started
+cassandra_memlock_limit: "unlimited"
+cassandra_nofile_limit: 100000
+cassandra_as_limit: "unlimited"
+cassandra_nproc_limit: 8096
 
 # Owner (see defaults in vars/ )
 cassandra_user: cassandra
