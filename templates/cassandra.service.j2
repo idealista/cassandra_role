@@ -8,6 +8,11 @@ Type=simple
 ExecStart={{ cassandra_executable_path }} -f
 User={{ cassandra_user }}
 Group={{ cassandra_group }}
+LimitMEMLOCK={{ cassandra_memlock_limit }}
+LimitNOFILE={{ cassandra_nofile_limit }}
+LimitAS={{ cassandra_as_limit }}
+LimitNPROC={{ cassandra_nproc_limit }}
+
 
 [Install]
 WantedBy=multi-user.target
