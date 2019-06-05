@@ -8,13 +8,19 @@ lint:
 platforms:
   - name: cassandra-${MOLECULE_DISTRO:-debian9}
     image: geerlingguy/docker-${MOLECULE_DISTRO:-debian9}-ansible
-    privileged: true
+    privileged: false
     capabilities:
       - SYS_ADMIN
     volumes:
       - '/sys/fs/cgroup:/sys/fs/cgroup:ro'
+      - '/sys/fs/fuse/connections:/sys/fs/fuse/connections:ro'
+      - '/dev/hugepages:/dev/hugepages'
     groups:
       - cassandra
+    tmpfs:
+      - '/tmp'
+      - '/run'
+      - '/run/lock'
     command: '/lib/systemd/systemd'
 provisioner:
   name: ansible
